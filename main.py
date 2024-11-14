@@ -1,3 +1,4 @@
+# To run this file, you should enter python3 into the terminal, but I've added this command to .zshrc and named it 'pm'.
 import sqlite3 as sql
 import sys
 from random import randint
