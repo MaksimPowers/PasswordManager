@@ -1,9 +1,8 @@
-# To run this file, you should enter python3 into the terminal, but I've added this command to .zshrc and named it 'pm'.
 import sqlite3 as sql
 import sys
 from random import randint
 
-symbols = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*_'
+symbols = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*_1234567890'
 
 def generatePassword(lenght):
 
@@ -36,6 +35,7 @@ def passwordToHash(inputCode, password):
     return hashP
 
 def main(): 
+
     with sql.connect("hash.db") as conn:
         cur = conn.cursor()
 
@@ -128,6 +128,20 @@ def main():
             ''')
 
             print("\nTHE DATABASE WAS CLEARED\n")
+
+        elif com == 'init':
+
+            cur.execute('''
+
+            CREATE TABLE IF NOT EXISTS hashTable (
+                NAME TEXT,
+                HASH TEXT,
+                PRIMARY KEY(NAME)
+            )
+
+            ''')
+
+            print("\nThe database is created successfuly!\n")
 
         elif com == 'help':
             print("\nIf You wanna get the password, so enter 'pm get', if you wanna insert the password - enter 'pm insert', if you want to see list of all Password Names, so enter 'pm list'\n")
