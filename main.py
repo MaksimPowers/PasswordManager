@@ -1,6 +1,8 @@
 import sqlite3 as sql
 import sys
 from random import randint
+import pyperclip
+import getpass
 
 symbols = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*_1234567890'
 
@@ -34,6 +36,9 @@ def passwordToHash(inputCode, password):
 
     return hashP
 
+def copy_to_clipboard(obj):
+    pyperclip.copy(str(obj))
+
 def main(): 
 
     with sql.connect("hash.db") as conn:
@@ -55,24 +60,28 @@ def main():
                 if sys.argv[2] == 'allHash':
                     cur.execute("SELECT * FROM hashTable")
                     rows = cur.fetchall()
-                    print()
+                    line = '\nNAME : [PASSWORD]\n\n'
+
                     for row in rows:
-                        print(f"'{row[0]}':    ", [row[1]])
-                    print()
+                        line += f'{row[0]} : {[row[1]]}\n'
+                    copy_to_clipboard(line)
+
+                    print("{NAME: HASH} dict was COPIED TO THE CLIPBOARD")
             else: 
-                MasterPassword = input("Insert the MASTER PASSWORD:    ")
+                MasterPassword = getpass.getpass("Insert the MASTER PASSWORD:    ")
                 inp = input("Insert the place: ")
                 cur.execute("SELECT * FROM hashTable WHERE NAME = ? LIMIT 1", (inp,))
                 rows = cur.fetchall()
                 if rows:
                     _hash_ = rows[0][1]  # Adjust the index based on your schema
                     password = hashToPassword(MasterPassword, _hash_)
-                    print('\n',f"'{password}'", '\n')
+                    copy_to_clipboard(password)
+                    print('\n',"The PASSWORD was copied to the CLIPBOARD!", '\n')
                 else:
                     print("\nNo results found.\n")
 
         elif com == 'insert':
-                MasterPassword = input("Insert the MASTER PASSWORD:    ")
+                MasterPassword = getpass.getpass("Insert the MASTER PASSWORD:    ")
 
                 inp1 = input("Insert the NAME:     ")
                 
@@ -81,7 +90,7 @@ def main():
 
                         inp2 = generatePassword(len(MasterPassword))
 
-                        print(f"Password generated successful! Generated PASSWORD:   '{inp2}'")
+                        print(f"Password generated successful!")
 
 
                 else: 
@@ -92,7 +101,7 @@ def main():
 
                     inp2 = generatePassword(len(MasterPassword))
 
-                    print(f"Password generated successful! Generated PASSWORD:   '{inp2}'")
+                    print(f"Password generated successful!")
 
                 hashed_password = passwordToHash(MasterPassword, inp2)
 
@@ -104,7 +113,7 @@ def main():
                 rows = cur.fetchall()
                 print()
                 for i in rows:
-                    print(i[0])  # Assuming you want to print just the NAME
+                    print(i[0])
                 print()
 
         elif com == 'genPW':
