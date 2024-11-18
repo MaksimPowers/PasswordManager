@@ -46,6 +46,7 @@ def insertMP(toCheck, __list__):
 
         out = getpass.getpass("Insert the MASTER PASSWORD:    ")
 
+    print()
 
     return out
 
